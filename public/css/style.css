@@ -1,0 +1,152 @@
+body {
+    font-family : "Plus Jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+.container {
+   flex: 1;
+    padding: 20px;
+    margin: auto !important;
+   
+}
+
+
+/* Navbar */
+.navbar {
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    height: 5rem;
+}
+
+.fa-compass {
+    color: #fe424f;
+    font-size: 2rem;
+}
+
+/* Add depth to navbar */
+.navbar {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+    background: linear-gradient(90deg, #f8f9fa 80%, #e9ecef 100%);
+}
+
+/* Add depth to footer */
+.f-info {
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08), 0 -1.5px 4px rgba(0,0,0,0.04);
+    background: linear-gradient(90deg, #f8f9fa 80%, #e9ecef 100%);
+}
+
+.nav-link {
+    color: #090909 !important;
+    font-weight: bold;
+}
+
+/* Footer */
+
+.f-info-links a {
+    color: #050505;
+    text-decoration: none;
+    margin-right: 1rem ;
+}
+
+.f-info-links {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
+.f-info-socials {
+    width: 100%;
+    font-size: 1.2rem;
+    margin-right: 2rem;
+    display: flex;
+    justify-content: center; /* horizontal centering */
+    align-items: center;   /* vertical centering */
+}
+
+.f-info-socials i {
+
+    margin: 0 10px;
+    font-size: 1.5rem;
+}
+
+
+.f-info-links a:hover {
+    text-decoration: underline;
+}
+
+.f-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;   /* horizontal centering */
+    align-items: center;       /* vertical centering */
+    height: 8rem;
+    background-color: #f8f9fa;
+    flex-wrap: wrap;
+}
+
+
+/* Cards */ 
+.card {
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+  
+}
+
+
+
+.card-img-top {
+   border-radius:  0.2rem !important;
+   width: 100% !important;
+   object-fit: cover !important;
+}
+
+.card-body {
+    padding: 1rem;
+    
+}
+
+/* Card-effect */
+
+.card-img-overlay{
+    opacity: 0;
+
+}
+
+.card-img-overlay :hover{
+    opacity: 0.5 !important;
+    background-color: white;
+}
+
+
+/* Show Page */
+
+.edit-btn {
+  
+    background-color: #2a2727;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-btn{
+
+    background-color: #292627;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+    background-color: #3a3737;
+    color: white;
+}
