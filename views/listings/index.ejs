@@ -1,5 +1,5 @@
 <%- layout("layouts/boilerplate.ejs") %>
-<body>
+
  
     <h4>All Listings</h4>
    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-2">
@@ -7,14 +7,14 @@
         <a href="listings/<%= listing._id %>" class="text-decoration-none text-dark">
         <div class="col mb-4" >
             <div class="card h-100">
-                <img src="<%= listing.image %>" class="card-img-top" alt="listing image" style="height: 14rem;">
+                <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height: 14rem;">
                 <div class="card-img-overlay">
                     <h5 class="card-title"></h5>
                     <p class="card-text"></p>
                     <p class="card-text"><small></small></p>
                 </div>
                 <div class="card-body">
-                    <p class="card-text"><b><%= listing.title %> </b><br>
+                    <p class="card-text"><b><%= listing.title %> </b><br>  
                         &#8377;<%= listing.price.toLocaleString("en-IN") %> / night
                     </p>
                 </div>
@@ -24,4 +24,4 @@
         <% } %>
    </div>
     
-</body>
+

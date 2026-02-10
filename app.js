@@ -1,18 +1,31 @@
+if(process.env.NODE_ENV !="production"){
+  require('dotenv').config();
+}
+
+console.log(process.env.CLOUD_NAME);
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const ejs = require('ejs');
-const Listing = require('./models/listing.js');
 const path = require('path');
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
-const wrapAsync = require('./utils/wrapAsync.js'); 
 const ExpressError = require('./utils/ExpressError.js');
-const { listingSchema } = require('./schema.js'); 
-const Review = require('./models/reviews.js');
-const { reviewSchema } = require('./schema.js');
-const listings = require('./routes/listing.js');
-const reviews = require('./routes/review.js');
+
+
+const listingRoutes = require('./routes/listing.js');
+const reviewRoutes = require('./routes/review.js');
+const userRoutes = require('./routes/user.js');
+
+
+const session = require('express-session');
+const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
+const User = require('./models/user.js');
+
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
 
@@ -38,6 +51,16 @@ async function main() {
 } 
 
 
+const sessionOptions = {
+  secret: 'thisshouldbeabettersecret!',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+    httpOnly: true
+  }
+};
 
 
 // Root route
@@ -46,22 +69,30 @@ app.get('/', (req, res) => {
 });
 
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+// Session and flash middleware
+app.use(session(sessionOptions));
+app.use(flash());
+
+// Passport.js configuration
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser()); // How to store user in session
+passport.deserializeUser(User.deserializeUser()); // How to get user from session
 
 
-// app.get('/testListing', async (req, res) => {
-//   let sampleListing = new Listing({
-//     title: 'My new House',
-//     description: 'A beautiful house in the countryside',
-//     price: 250000,
-//     location: 'Countryside',
-//     country : 'USA',
-//   });
 
-//   await sampleListing.save();
-//   res.send('Listing created successfully!');
-// });
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  res.locals.currentUser = req.user;
+  next();
+});
+
+app.use("/listings", listingRoutes);
+app.use("/listings/:id/reviews", reviewRoutes);
+app.use("/", userRoutes);
 
 
 app.all(/.*/, (req, res , next) => {
@@ -73,7 +104,6 @@ app.all(/.*/, (req, res , next) => {
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = 'Something went wrong' } = err;
   res.status(statusCode).render("error.ejs" , { statusCode, message });
-  // res.status(statusCode).send(message);
 });
 
 
