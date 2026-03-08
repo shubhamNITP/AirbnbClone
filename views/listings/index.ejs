@@ -38,6 +38,19 @@
             padding: auto;
         }
 
+
+                .filter i {
+            font-size: 1.3rem;
+        }
+
+        .filter p {
+            font-size: 0.8rem;
+        }
+
+        .card img {
+            object-fit: cover;
+        }
+
        
     </style>
  
@@ -55,17 +68,10 @@
                 <p>Mountains</p>
             </div>
         <div class="filter">
-            <div><i class="fa-solid fa-caves"></i></div>
-            <p>Caves</p>
-        </div>
-        <div class="filter">
             <div> <i class="fa-solid fa-igloo"></i></div>
                 <p>Igloos</p>
             </div>
-        <div class="filter">
-            <div><i class="fa-solid fa-beach"></i></div>
-            <p>Beaches</p>
-        </div>
+    
 
         <div class="tax-toggle">
             <div class="form-check-reverse form-switch">
@@ -76,7 +82,7 @@
     </div>
    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-2">
         <% for (let listing of listings) { %>
-        <a href="listings/<%= listing._id %>" class="text-decoration-none text-dark">
+        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
         <div class="col mb-4" >
             <div class="card h-100">
                 <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height: 14rem;">
@@ -86,8 +92,9 @@
                     <p class="card-text"><small></small></p>
                 </div>
                 <div class="card-body">
-                    <p class="card-text"><b><%= listing.title %> </b><br>  
-                        &#8377;<%= listing.price.toLocaleString("en-IN") %> / night
+                     <p class="card-text listing-price" data-price="<%= listing.price %>">
+                        <b><%= listing.title %></b><br>
+                        ₹<%= listing.price.toLocaleString("en-IN") %> / night
                     </p>
                 </div>
             </div>
@@ -97,22 +104,30 @@
    </div>
     
 <script>
-    let taxSwtich = document.getElementById("flexSwitchCheckDefault");
-    taxSwtich.addEventListener("change", function() {
-        let priceElements = document.querySelectorAll(".card-text");
-        priceElements.forEach(function(element) {
-            let priceText = element.textContent;
-            let priceMatch = priceText.match(/₹([\d,]+)/);
-            if (priceMatch) {
-                let price = parseInt(priceMatch[1].replace(/,/g, ''));
-                if (taxSwtich.checked) {
-                    // Assuming a tax rate of 18%
-                    let totalPrice = price * 1.18;
-                    element.textContent = `₹${totalPrice.toLocaleString("en-IN")} / night (incl. tax)`;
-                } else {
-                    element.textContent = `₹${price.toLocaleString("en-IN")} / night`;
-                }
+        let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+
+    taxSwitch.addEventListener("change", function () {
+
+        let priceElements = document.querySelectorAll(".listing-price");
+
+        priceElements.forEach(function (element) {
+
+            let basePrice = parseInt(element.dataset.price);
+
+            if (taxSwitch.checked) {
+
+                let totalPrice = Math.round(basePrice * 1.18);
+
+                element.innerHTML =
+                    `<b>${element.querySelector("b").innerText}</b><br>
+                    ₹${totalPrice.toLocaleString("en-IN")} / night (incl. tax)`;
+
+            } else {
+
+                element.innerHTML =
+                    `<b>${element.querySelector("b").innerText}</b><br>
+                    ₹${basePrice.toLocaleString("en-IN")} / night`;
             }
         });
-    }); 
+    });
 </script>

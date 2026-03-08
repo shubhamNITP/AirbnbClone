@@ -67,23 +67,20 @@ store.on("error", function(e){
 
 const sessionOptions = {
   store,
-  secret: process.env.SECRET ,
+  secret: process.env.SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
-    expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-    httpOnly: true
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production"
   }
 };
 
 
 
 
-// Root route
-// app.get('/', (req, res) => {
-//   res.send("Hi , Welcome to the Express.js application!");  
-// });
 
 
 // Session and flash middleware
@@ -105,6 +102,14 @@ app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.currentUser = req.user;
   next();
+});
+
+
+
+// Root route
+app.get('/', (req, res) => {
+  // res.send("Hi , Welcome to the Express.js application!");  
+  res.render('home.ejs');
 });
 
 app.use("/listings", listingRoutes);
