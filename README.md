@@ -141,6 +141,8 @@ Listings Page
 Listing Details
 Create Listing
 
+<img width="1902" height="1039" alt="image" src="https://github.com/user-attachments/assets/6ee1b7d4-000b-4acf-b3fb-03bcbf1abe14" />
+
 
 ---
 
