@@ -2,7 +2,7 @@ if(process.env.NODE_ENV !="production"){
   require('dotenv').config();
 }
 
-console.log(process.env.CLOUD_NAME);
+// console.log(process.env.CLOUD_NAME);
 
 const express = require('express');
 const app = express();
@@ -20,6 +20,7 @@ const userRoutes = require('./routes/user.js');
 
 
 const session = require('express-session');
+const MongoStore = require('connect-mongo').default;
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -39,6 +40,8 @@ app.engine('ejs', ejsMate); // Use ejsMate for EJS layout support
 
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the public directory
 
+const db_url = process.env.ATLASDB_URL;
+
 // Connect to MongoDB
 main().then(() => {
   console.log('Connected to MongoDB');
@@ -47,12 +50,28 @@ main().then(() => {
 });
 
 async function main() {
-    await mongoose.connect('mongodb://localhost:27017/wanderlust') ;
+    
+    // console.log(db_url)
+    await mongoose.connect(db_url) ;
 } 
 
 
+const store = MongoStore.create({
+  mongoUrl: db_url,
+  touchAfter: 24 * 60 * 60,
+  crypto: {
+    secret: process.env.SECRET ,
+  }
+});
+
+
+store.on("error", function(e){
+  console.log("SESSION STORE ERROR", e);
+});
+
 const sessionOptions = {
-  secret: 'thisshouldbeabettersecret!',
+  store,
+  secret: process.env.SECRET ,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -63,10 +82,12 @@ const sessionOptions = {
 };
 
 
+
+
 // Root route
-app.get('/', (req, res) => {
-  res.send("Hi , Welcome to the Express.js application!");  
-});
+// app.get('/', (req, res) => {
+//   res.send("Hi , Welcome to the Express.js application!");  
+// });
 
 
 // Session and flash middleware

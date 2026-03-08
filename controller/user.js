@@ -7,7 +7,7 @@ module.exports.renderSignupForm = (req, res) => {
 }
 
 // Signup user
-module.exports.signupUser = async (req, res) => {
+module.exports.signupUser = async (req, res,next) => {
     try {
         let {username , email , password} = req.body ;
         const newUser = new User({
@@ -17,14 +17,15 @@ module.exports.signupUser = async (req, res) => {
         const registeredUser = await User.register(newUser , password) ;
         console.log(registeredUser);
 
-        req.login(registeredUser , (err) => {
-            if(err) {
-                return next(err) ;
-            }
-            
-            req.flash("success" , "Welcome to Wanderlust!") ;
-            res.redirect("/listings") ;
-        }) ;
+         await new Promise((resolve, reject) => {
+            req.login(registeredUser, (err) => {
+                if (err) return reject(err);
+                resolve();
+            });
+        });
+
+        req.flash("success", "Welcome to Wanderlust!");
+        res.redirect("/listings");
         
     } catch (error) {
         if (error.code === 11000) {

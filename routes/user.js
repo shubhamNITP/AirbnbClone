@@ -8,16 +8,16 @@ const usersController = require('../controller/user.js');
 
 
 router.route('/signup')
-    .get(wrapAsync(usersController.renderSignupForm))
+    .get(usersController.renderSignupForm)
     .post(wrapAsync(usersController.signupUser));
 
 
 router.route('/login')
-    .get(wrapAsync(usersController.renderLoginForm))
+    .get(usersController.renderLoginForm)
     .post(middleware.saveRedirectUrl, passport.authenticate("local", {failureFlash: true, failureRedirect: "/login"}), wrapAsync(usersController.loginUser));
 
 router.route('/logout')
-    .get(wrapAsync(usersController.logoutUser));
+    .get(usersController.logoutUser);
 
 
 module.exports = router;
